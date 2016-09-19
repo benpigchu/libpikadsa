@@ -1,3 +1,10 @@
+/*
+ * Stack with linked list
+ *
+ * Notice: do not pop element from empty stack
+ *
+ */
+
 #ifndef STACK_HPP
 #define STACK_HPP
 

@@ -1,3 +1,10 @@
+/*
+ * Queue with linked list
+ *
+ * Notice: do not put out element from empty queue
+ *
+ */
+
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 
@@ -13,7 +20,7 @@ class Queue{
 	Node *tail=0;
 	public:
 	void putIn(T v){
-		if(tail==0){
+		if(head==0){
 			tail=new Node(v);
 			head=tail;
 		}else{
@@ -26,6 +33,9 @@ class Queue{
 		Node *n=head->next;
 		delete head;
 		head=n;
+		if(head==0){
+			tail==0;
+		}
 		return v;
 	}
 	bool isEmpty(){
