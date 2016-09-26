@@ -24,5 +24,7 @@ int main(){
 	std::cout<<((v[3]==5)?"pass":"fail")<<std::endl;
 	std::cout<<((v.remove(3)==5)?"pass":"fail")<<std::endl;
 	std::cout<<((v[3]==4)?"pass":"fail")<<std::endl;
+	v.expandTo(16);
+	std::cout<<((v.getCapacity()==16)?"pass":"fail")<<std::endl;
 	return 0;
 }

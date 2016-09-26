@@ -1,3 +1,10 @@
+/*
+ * Vector without sort operation
+ *
+ * Notice: do not access invalid index
+ *
+ */
+
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <cstdlib>
@@ -14,6 +21,18 @@ class Vector{
 	}
 	void expand(){
 		capacity<<=1;
+		T *newBuffer=new T[capacity];
+		for(size_t i=0;i<size;i++){
+			newBuffer[i]=buffer[i];
+		}
+		delete[] buffer;
+		buffer=newBuffer;
+	}
+	void expandTo(size_t s){
+		if(capacity>=s){
+			return;
+		}
+		capacity=s;
 		T *newBuffer=new T[capacity];
 		for(size_t i=0;i<size;i++){
 			newBuffer[i]=buffer[i];
@@ -60,6 +79,7 @@ class Vector{
 		for(size_t i=n+1;i<size;i++){
 			buffer[i-1]=buffer[i];
 		}
+		size--;
 		return v;
 	}
 	T& operator[](size_t n){
