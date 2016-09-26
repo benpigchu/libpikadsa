@@ -7,16 +7,17 @@
 
 #ifndef STACK_HPP
 #define STACK_HPP
+#include <cstdlib>
 
 template<typename T>
 class Stack{
 	struct Node{
 		T value;
-		Node *next=0;
-		Node(T val,Node *ne=0):value(val),next(ne){}
+		Node *next=NULL;
+		Node(T val,Node *ne=NULL):value(val),next(ne){}
 		~Node(){}
 	};
-	Node *head=0;
+	Node *head=NULL;
 	public:
 	void push(T v){
 		head=new Node(v,head);
@@ -28,11 +29,11 @@ class Stack{
 		head=n;
 		return v;
 	}
-	bool isEmpty(){
-		return head==0;
+	bool isEmpty()const{
+		return head==NULL;
 	}
 	~Stack(){
-		while(head!=0){
+		while(head!=NULL){
 			pop();
 		}
 	}

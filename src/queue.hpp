@@ -7,20 +7,21 @@
 
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
+#include <cstdlib>
 
 template<typename T>
 class Queue{
 	struct Node{
 		T value;
-		Node *next=0;
-		Node(T val,Node *ne=0):value(val),next(ne){}
+		Node *next=NULL;
+		Node(T val,Node *ne=NULL):value(val),next(ne){}
 		~Node(){}
 	};
-	Node *head=0;
-	Node *tail=0;
+	Node *head=NULL;
+	Node *tail=NULL;
 	public:
 	void putIn(T v){
-		if(head==0){
+		if(head==NULL){
 			tail=new Node(v);
 			head=tail;
 		}else{
@@ -33,16 +34,16 @@ class Queue{
 		Node *n=head->next;
 		delete head;
 		head=n;
-		if(head==0){
-			tail==0;
+		if(head==NULL){
+			tail==NULL;
 		}
 		return v;
 	}
-	bool isEmpty(){
-		return head==0;
+	bool isEmpty()const{
+		return head==NULL;
 	}
 	~Queue(){
-		while(head!=0){
+		while(head!=NULL){
 			putOut();
 		}
 	}
