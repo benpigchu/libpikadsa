@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <cstddef>
 #include "compare.hpp"
+#include "stack.hpp"
 #include "vector.hpp"
 
 template<typename T,size_t initCapacity=1024>
@@ -52,6 +53,58 @@ class SortableVector:public Vector<T,initCapacity>{
 			return -1;
 		}
 		return (this->buffer[result]==v)?result:-1;
+	}
+	private:
+	enum MergeSortTaskType{MERGE,MERGESORT};
+	struct MergeSortTask{
+		MergeSortTaskType type;
+		ptrdiff_t from,to,mid;
+	};
+	void merge(ptrdiff_t from,ptrdiff_t to,ptrdiff_t mid,int(*compare)(const T&,const T&)=defaultCompare<T>){
+		T* tmp=new T[to-from];
+		ptrdiff_t left=from,right=mid,neo=0;
+		while(left!=mid&&right!=to){
+			if(compare(this->buffer[left],this->buffer[right])<=0){
+				tmp[neo]=this->buffer[left];
+				left++;
+			}else{
+				tmp[neo]=this->buffer[right];
+				right++;
+			}
+			neo++;
+		}
+		while(left!=mid){
+			tmp[neo]=this->buffer[left];
+			left++;
+			neo++;
+		}
+		while(right!=to){
+			tmp[neo]=this->buffer[right];
+			right++;
+			neo++;
+		}
+		for(ptrdiff_t i=from;i<to;i++){
+			this->buffer[i]=tmp[i-from];
+		}
+		delete[] tmp;
+	}
+	public:
+	void mergeSort(int(*compare)(const T&,const T&)=defaultCompare<T>){
+		Stack<MergeSortTask> tasks;
+		tasks.push({MERGESORT,0,this->size,0});
+		while(!tasks.isEmpty()){
+			MergeSortTask task=tasks.pop();
+			if(task.type==MERGE){
+				merge(task.from,task.to,task.mid,compare);
+			}else{
+				if(task.to-task.from>1){
+					ptrdiff_t mid=(task.from+task.to)>>1;
+					tasks.push({MERGE,task.from,task.to,mid});
+					tasks.push({MERGESORT,task.from,mid,0});
+					tasks.push({MERGESORT,mid,task.to,0});
+				}
+			}
+		}
 	}
 };
 

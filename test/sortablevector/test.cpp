@@ -29,5 +29,12 @@ int main(){
 	std::cout<<((v.binarySearch(6)==3)?"pass":"fail")<<std::endl;
 	std::cout<<((v.binaryFind(7)==3)?"pass":"fail")<<std::endl;
 	std::cout<<((v.binaryFind(8)==-1)?"pass":"fail")<<std::endl;
+	v.resize(4);
+	v.addToEnd(1);
+	v.addToEnd(4);
+	v.addToEnd(6);
+	v.addToEnd(0);
+	v.mergeSort();
+	std::cout<<(v.sorted()?"pass":"fail")<<std::endl;
 	return 0;
 }
