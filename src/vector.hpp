@@ -54,6 +54,10 @@ class Vector{
 		delete[] buffer;
 		buffer=newBuffer;
 	}
+	void resize(size_t s){
+		expandTo(s);
+		size=s;
+	}
 	void addToEnd(T v){
 		if(size>=capacity){
 			expand();

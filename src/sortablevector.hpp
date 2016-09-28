@@ -33,6 +33,26 @@ class SortableVector:public Vector<T,initCapacity>{
 		}
 		return true;
 	}
+	ptrdiff_t binarySearch(T v,int(*compare)(const T&,const T&)=defaultCompare<T>){
+		ptrdiff_t l=0;
+		ptrdiff_t r=this->size;
+		while(r-l>0){
+			ptrdiff_t mid=(l+r)>>1;
+			if(compare(this->buffer[mid],v)<0){
+				l=mid+1;
+			}else{
+				r=mid;
+			}
+		}
+		return l;
+	}
+	ptrdiff_t binaryFind(T v,int(*compare)(const T&,const T&)=defaultCompare<T>){
+		ptrdiff_t result=binarySearch(v,compare);
+		if(result>=this->size){
+			return -1;
+		}
+		return (this->buffer[result]==v)?result:-1;
+	}
 };
 
 #endif //SORTABLEVECTOR_HPP
