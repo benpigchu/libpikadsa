@@ -15,18 +15,20 @@
 
 template<typename T,size_t initCapacity=1024>
 class SortableVector:public Vector<T,initCapacity>{
+	typedef int(*VoidComparer)(const void*,const void*);
+	typedef int(*Comparer)(const T&,const T&);
 	public:
-	void qSort(int(*compare)(const void*,const void*)=compareWarper<T,defaultCompare<T> >){
+	void qSort(VoidComparer compare=compareWarper<T,defaultCompare<T> >){
 		qsort(this->buffer,this->size,sizeof *(this->buffer),compare);
 	}
-	ptrdiff_t bSearch(T v,int(*compare)(const void*,const void*)=compareWarper<T,defaultCompare<T> >){
+	ptrdiff_t bSearch(T v,VoidComparer compare=compareWarper<T,defaultCompare<T> >){
 		void *ptr=bsearch(&v,this->buffer,this->size,sizeof *(this->buffer),compare);
 		if(ptr==NULL){
 			return -1;
 		}
 		return static_cast<const T*>(ptr)-this->buffer;
 	}
-	bool sorted(int(*compare)(const T&,const T&)=defaultCompare<T>){
+	bool sorted(Comparer compare=defaultCompare<T>){
 		for(ptrdiff_t i=0;i<this->size-1;i++){
 			if(compare(this->buffer[i],this->buffer[i+1])>0){
 				return false;
@@ -34,7 +36,7 @@ class SortableVector:public Vector<T,initCapacity>{
 		}
 		return true;
 	}
-	ptrdiff_t binarySearch(T v,int(*compare)(const T&,const T&)=defaultCompare<T>){
+	ptrdiff_t binarySearch(T v,Comparer compare=defaultCompare<T>){
 		ptrdiff_t l=0;
 		ptrdiff_t r=this->size;
 		while(r-l>0){
@@ -47,7 +49,7 @@ class SortableVector:public Vector<T,initCapacity>{
 		}
 		return l;
 	}
-	ptrdiff_t binaryFind(T v,int(*compare)(const T&,const T&)=defaultCompare<T>){
+	ptrdiff_t binaryFind(T v,Comparer compare=defaultCompare<T>){
 		ptrdiff_t result=binarySearch(v,compare);
 		if(result>=this->size){
 			return -1;
@@ -60,7 +62,7 @@ class SortableVector:public Vector<T,initCapacity>{
 		MergeSortTaskType type;
 		ptrdiff_t from,to,mid;
 	};
-	void merge(ptrdiff_t from,ptrdiff_t to,ptrdiff_t mid,int(*compare)(const T&,const T&)=defaultCompare<T>){
+	void merge(ptrdiff_t from,ptrdiff_t to,ptrdiff_t mid,Comparer compare=defaultCompare<T>){
 		T* tmp=new T[to-from];
 		ptrdiff_t left=from,right=mid,neo=0;
 		while(left!=mid&&right!=to){
@@ -89,7 +91,7 @@ class SortableVector:public Vector<T,initCapacity>{
 		delete[] tmp;
 	}
 	public:
-	void mergeSort(int(*compare)(const T&,const T&)=defaultCompare<T>){
+	void mergeSort(Comparer compare=defaultCompare<T>){
 		Stack<MergeSortTask> tasks;
 		tasks.push({MERGESORT,0,this->size,0});
 		while(!tasks.isEmpty()){
