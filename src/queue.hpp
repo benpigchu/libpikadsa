@@ -8,6 +8,7 @@
 #ifndef QUEUE_HPP
 #define QUEUE_HPP
 #include <cstdlib>
+#include <cstddef>
 
 template<typename T>
 class Queue{

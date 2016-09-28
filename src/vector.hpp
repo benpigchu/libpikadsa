@@ -8,6 +8,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
 #include <cstdlib>
+#include <cstddef>
 
 template<typename T,size_t initCapacity=1024>
 class Vector{
@@ -22,7 +23,7 @@ class Vector{
 	void expand(){
 		capacity<<=1;
 		T *newBuffer=new T[capacity];
-		for(size_t i=0;i<size;i++){
+		for(ptrdiff_t i=0;i<size;i++){
 			newBuffer[i]=buffer[i];
 		}
 		delete[] buffer;
@@ -34,7 +35,7 @@ class Vector{
 		}
 		capacity=s;
 		T *newBuffer=new T[capacity];
-		for(size_t i=0;i<size;i++){
+		for(ptrdiff_t i=0;i<size;i++){
 			newBuffer[i]=buffer[i];
 		}
 		delete[] buffer;
@@ -47,7 +48,7 @@ class Vector{
 		}
 		capacity=newCapacity;
 		T *newBuffer=new T[newCapacity];
-		for(size_t i=0;i<size;i++){
+		for(ptrdiff_t i=0;i<size;i++){
 			newBuffer[i]=buffer[i];
 		}
 		delete[] buffer;
@@ -64,28 +65,28 @@ class Vector{
 		size--;
 		return buffer[size];
 	}
-	void insert(size_t n,T v){
+	void insert(ptrdiff_t n,T v){
 		if(size>=capacity){
 			expand();
 		}
-		for(size_t i=size;i>=n;i--){
+		for(ptrdiff_t i=size;i>=n;i--){
 			buffer[i+1]=buffer[i];
 		}
 		size++;
 		buffer[n]=v;
 	}
-	T remove(size_t n){
+	T remove(ptrdiff_t n){
 		T v=buffer[n];
-		for(size_t i=n+1;i<size;i++){
+		for(ptrdiff_t i=n+1;i<size;i++){
 			buffer[i-1]=buffer[i];
 		}
 		size--;
 		return v;
 	}
-	T& operator[](size_t n){
+	T& operator[](ptrdiff_t n){
 		return buffer[n];
 	}
-	const T& operator[](size_t n)const{
+	const T& operator[](ptrdiff_t n)const{
 		return buffer[n];
 	}
 	bool isEmpty()const{

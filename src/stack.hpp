@@ -8,6 +8,7 @@
 #ifndef STACK_HPP
 #define STACK_HPP
 #include <cstdlib>
+#include <cstddef>
 
 template<typename T>
 class Stack{
