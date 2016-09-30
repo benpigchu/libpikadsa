@@ -12,8 +12,9 @@ class DoubleList{
 	Node *head=NULL,*tail=NULL;
 	size_t size=0;
 	friend class Visitor;
+	friend class ConstVisitor;
 	public:
-	Enum VisitorType{HEAD,TAIL,NORMAL}
+	enum VisitorType{HEAD,TAIL,NORMAL};
 	class ConstVisitor{
 		VisitorType type;
 		Node *node;
@@ -24,12 +25,18 @@ class DoubleList{
 		const T& operator*()const{
 			return node->value;
 		}
+		bool isHead()const{
+			return type==HEAD;
+		}
+		bool isTail()const{
+			return type==TAIL;
+		}
 		ConstVisitor& next(){
 			if(type==TAIL){
 				return *this;
 			}
 			if(type==HEAD){
-				node=l.head;
+				node=list.head;
 				type=NORMAL;
 			}else{
 				node=node->next;
@@ -37,14 +44,14 @@ class DoubleList{
 			if(node==NULL){
 				type=TAIL;
 			}
-			return *this
+			return *this;
 		}
 		ConstVisitor& prev(){
 			if(type==HEAD){
 				return *this;
 			}
 			if(type==TAIL){
-				node=l.tail;
+				node=list.tail;
 				type=NORMAL;
 			}else{
 				node=node->prev;
@@ -52,136 +59,192 @@ class DoubleList{
 			if(node==NULL){
 				type=HEAD;
 			}
-			return *this
+			return *this;
+		}
+		ConstVisitor& operator++(){
+			return next();
+		}
+		ConstVisitor operator++(int){
+			Visitor tmp(this->type,this->node,this->list);
+			operator++();
+			return tmp;
+		}
+		ConstVisitor& operator--(){
+			return prev();
+		}
+		ConstVisitor operator--(int){
+			Visitor tmp(this->type,this->node,this->list);
+			operator--();
+			return tmp;
 		}
 	};
-	class Visitor:ConstVisitor{
-		Visitor(VisitorType t,Node *n,DoubleList &l):ConstVisitor(VisitorType t,Node *n,DoubleList &l){}
+	class Visitor:public ConstVisitor{
+		friend class DoubleList;
+		Visitor(VisitorType t,Node *n,DoubleList &l):ConstVisitor(t,n,l){}
+		public:
 		T& operator*()const{
-			return node->value;
+			return this->node->value;
 		}
 		T* operator->()const{
-			return *(node->value);
+			return *(this->node->value);
 		}
 		Visitor& next(){
-			if(type==TAIL){
+			if(this->type==TAIL){
 				return *this;
 			}
-			if(type==HEAD){
-				node=l.head;
-				type=NORMAL;
+			if(this->type==HEAD){
+				this->node=this->list.head;
+				this->type=NORMAL;
 			}else{
-				node=node->next;
+				this->node=this->node->next;
 			}
-			if(node==NULL){
-				type=TAIL;
+			if(this->node==NULL){
+				this->type=TAIL;
 			}
 			return *this;
 		}
 		Visitor& prev(){
-			if(type==HEAD){
+			if(this->type==HEAD){
 				return *this;
 			}
-			if(type==TAIL){
-				node=l.tail;
-				type=NORMAL;
+			if(this->type==TAIL){
+				this->node=this->list.tail;
+				this->type=NORMAL;
 			}else{
-				node=node->prev;
+				this->node=this->node->prev;
 			}
-			if(node==NULL){
-				type=HEAD;
+			if(this->node==NULL){
+				this->type=HEAD;
 			}
 			return *this;
 		}
 		Visitor& operator++(){
 			return next();
 		}
-		Visitor& operator++(int){
-			Visitor tmp(type,node,list)
-			operator++()
+		Visitor operator++(int){
+			Visitor tmp(this->type,this->node,this->list);
+			operator++();
 			return tmp;
 		}
 		Visitor& operator--(){
-			return perv();
+			return prev();
 		}
-		Visitor& operator++(int){
-			Visitor tmp(type,node,list)
-			operator--()
+		Visitor operator--(int){
+			Visitor tmp(this->type,this->node,this->list);
+			operator--();
 			return tmp;
 		}
 		Visitor& insertBefore(T v){
-			if(type!=HEAD){
-				list.size++;
+			if(this->type!=HEAD){
+				this->list.size++;
 				Node *toInsert=new Node();
 				toInsert->value=v;
-				if(type==NORMAL){
-					toInsert->prev=node->prev;
-					toInsert->next=node;
-					if(node->prev!=NULL){
-						node->prev->next=toInsert;
+				if(this->type==NORMAL){
+					toInsert->prev=this->node->prev;
+					toInsert->next=this->node;
+					if(this->node->prev!=NULL){
+						this->node->prev->next=toInsert;
 					}else{
-						list.head=toInsert;
+						this->list.head=toInsert;
 					}
-					node->prev=toInsert;
+					this->node->prev=toInsert;
 				}else{
-					list.tail->next=toInsert;
-					toInsert->prev=list.tail;
-					list.tail=toInsert;
+					if(this->list.tail!=NULL){
+						this->list.tail->next=toInsert;
+						toInsert->prev=this->list.tail;
+					}else{
+						this->list.head=toInsert;
+					}
+					this->list.tail=toInsert;
 				}
 			}
 			return *this;
 		}
 		Visitor& insertAfter(T v){
-			if(type!=TAIL){
-				list.size++;
+			if(this->type!=TAIL){
+				this->list.size++;
 				Node *toInsert=new Node();
 				toInsert->value=v;
-				if(type==NORMAL){
-					toInsert->prev=node;
-					toInsert->next=node->next;
-					if(node->next!=NULL){
-						node->next->prev=toInsert;
+				if(this->type==NORMAL){
+					toInsert->prev=this->node;
+					toInsert->next=this->node->next;
+					if(this->node->next!=NULL){
+						this->node->next->prev=toInsert;
 					}else{
-						list.tail=toInsert;
+						this->list.tail=toInsert;
 					}
-					node->next=toInsert;
+					this->node->next=toInsert;
 				}else{
-					list.head->prev=toInsert;
-					toInsert->next=list.head;
-					list.head=toInsert;
+					if(this->list.head!=NULL){
+						this->list.head->prev=toInsert;
+						toInsert->next=this->list.head;
+					}else{
+						this->list.tail=toInsert;
+					}
+					this->list.head=toInsert;
 				}
 			}
 			return *this;
 		}
-		T remove(){
-			T tmp=node->value;
-			if(type==NORMAL){
-				if(node->prev!=NULL){
-					node->prev->next=node->next;
+		Visitor& removeToLeft(){
+			if(this->type==NORMAL){
+				Node *left=this->node->prev;
+				if(this->node->prev!=NULL){
+					this->node->prev->next=this->node->next;
 				}else{
-					list.head=node->next;
+					this->list.head=this->node->next;
 				}
-				if(node->next!=NULL){
-					node->next->prev=node->prev;
+				if(this->node->next!=NULL){
+					this->node->next->prev=this->node->prev;
 				}else{
-					list.tail=node->prev;
+					this->list.tail=this->node->prev;
 				}
-				delete node;
+				delete this->node;
+				this->node=left;
+				if(this->node==NULL){
+					this->type=HEAD;
+				}
+				this->list.size--;
 			}
-			return tmp;
+			return *this;
 		}
-	}
+		Visitor& removeToRight(){
+			if(this->type==NORMAL){
+				Node *right=this->node->next;
+				if(this->node->prev!=NULL){
+					this->node->prev->next=this->node->next;
+				}else{
+					this->list.head=this->node->next;
+				}
+				if(this->node->next!=NULL){
+					this->node->next->prev=this->node->prev;
+				}else{
+					this->list.tail=this->node->prev;
+				}
+				delete this->node;
+				this->node=right;
+				if(this->node==NULL){
+					this->type=TAIL;
+				}
+				this->list.size--;
+			}
+			return *this;
+		}
+	};
 	Visitor getHead(){
 		return Visitor(HEAD,NULL,*this);
 	}
 	ConstVisitor getHead()const{
 		return ConstVisitor(HEAD,NULL,*this);
 	}
-	Visitor getTail()const{
+	Visitor getTail(){
 		return Visitor(TAIL,NULL,*this);
 	}
 	ConstVisitor getTail()const{
 		return ConstVisitor(TAIL,NULL,*this);
+	}
+	size_t getSize()const{
+		return size;
 	}
 	bool isEmpty()const{
 		return head==NULL;
@@ -189,7 +252,7 @@ class DoubleList{
 	~DoubleList(){
 		while(head!=NULL){
 			Node* tmp=head;
-			head=tmp.next;
+			head=tmp->next;
 			delete tmp;
 		}
 	}
