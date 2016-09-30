@@ -20,11 +20,13 @@ int main(){
 	std::cout<<((*v==2)?"pass":"fail")<<std::endl;
 	v.next();
 	std::cout<<(v.isTail()?"pass":"fail")<<std::endl;
-	std::cout<<(l.getSize()==3?"pass":"fail")<<std::endl;
+	std::cout<<((l.getSize()==3)?"pass":"fail")<<std::endl;
 	std::cout<<((!l.isEmpty())?"pass":"fail")<<std::endl;
 	v.insertBefore(9);
 	v--;
+	std::cout<<((v)?"pass":"fail")<<std::endl;
 	std::cout<<((*v==9)?"pass":"fail")<<std::endl;
 	v++;
 	std::cout<<(v.isTail()?"pass":"fail")<<std::endl;
+	std::cout<<((!v)?"pass":"fail")<<std::endl;
 }

@@ -31,6 +31,9 @@ class DoubleList{
 		bool isTail()const{
 			return type==TAIL;
 		}
+		operator bool(){
+			return !(isHead()||isTail());
+		}
 		ConstVisitor& next(){
 			if(type==TAIL){
 				return *this;
