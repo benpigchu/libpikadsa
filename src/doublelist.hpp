@@ -1,3 +1,10 @@
+/*
+ * Double List
+ *
+ * Notice: do not visit value of Vistor in type HEAD and TAIL
+ *
+ */
+
 #ifndef DOUBLELIST_HPP
 #define DOUBLELIST_HPP
 #include <cstdlib>
@@ -231,6 +238,82 @@ class DoubleList{
 				}
 				this->list.size--;
 			}
+			return *this;
+		}
+		Visitor& moveToBefore(Visitor &p){
+			if(this->type==NORMAL&&p.type!=HEAD){
+				if(this->node->prev!=NULL){
+					this->node->prev->next=this->node->next;
+				}else{
+					this->list.head=this->node->next;
+				}
+				if(this->node->next!=NULL){
+					this->node->next->prev=this->node->prev;
+				}else{
+					this->list.tail=this->node->prev;
+				}
+				if(p.type==NORMAL){
+					this->node->prev=p.node->prev;
+					this->node->next=p.node;
+					if(p.node->prev!=NULL){
+						p.node->prev->next=this->node;
+					}else{
+						p.list.head=this->node;
+					}
+					p.node->prev=this->node;
+				}else{
+					this->node->next=NULL;
+					if(p.list.tail!=NULL){
+						p.list.tail->next=this->node;
+						this->node->prev=p.list.tail;
+					}else{
+						p.list.head=this->node;
+					}
+					p.list.tail=this->node;
+				}
+			}
+			return *this;
+		}
+		Visitor& moveToAfter(Visitor &p){
+			if(this->type==NORMAL&&p.type!=TAIL){
+				if(this->node->prev!=NULL){
+					this->node->prev->next=this->node->next;
+				}else{
+					this->list.head=this->node->next;
+				}
+				if(this->node->next!=NULL){
+					this->node->next->prev=this->node->prev;
+				}else{
+					this->list.tail=this->node->prev;
+				}
+				if(p.type==NORMAL){
+					this->node->prev=p.node;
+					this->node->next=p.node->next;
+					if(p.node->next!=NULL){
+						p.node->next->prev=this->node;
+					}else{
+						p.list.tail=this->node;
+					}
+					p.node->next=this->node;
+				}else{
+					this->node->prev=NULL;
+					if(p.list.head!=NULL){
+						p.list.head->prev=this->node;
+						this->node->next=p.list.head;
+					}else{
+						p.list.tail=this->node;
+					}
+					p.list.head=this->node;
+				}
+			}
+			return *this;
+		}
+		Visitor& reinsertBefore(Visitor &p){
+			p.moveToBefore(*this);
+			return *this;
+		}
+		Visitor& reinsertAfter(Visitor &p){
+			p.moveToAfter(*this);
 			return *this;
 		}
 	};

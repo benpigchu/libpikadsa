@@ -29,4 +29,10 @@ int main(){
 	v++;
 	std::cout<<(v.isTail()?"pass":"fail")<<std::endl;
 	std::cout<<((!v)?"pass":"fail")<<std::endl;
+	v--;
+	DoubleList<int>::Visitor vh=l.getHead();
+	std::cout<<(vh.isHead()?"pass":"fail")<<std::endl;
+	v.moveToAfter(vh);
+	v--;
+	std::cout<<(v.isHead()?"pass":"fail")<<std::endl;
 }
