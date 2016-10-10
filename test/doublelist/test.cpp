@@ -31,8 +31,13 @@ int main(){
 	std::cout<<((!v)?"pass":"fail")<<std::endl;
 	v--;
 	DoubleList<int>::Visitor vh=l.getHead();
-	std::cout<<(vh.isHead()?"pass":"fail")<<std::endl;
 	v.moveToAfter(vh);
 	v--;
 	std::cout<<(v.isHead()?"pass":"fail")<<std::endl;
+	v++;
+	DoubleList<int>::Visitor vt=l.getTail();
+	std::cout<<(vt.isTail()?"pass":"fail")<<std::endl;
+	v.moveToBefore(vt);
+	v++;
+	std::cout<<(v.isTail()?"pass":"fail")<<std::endl;
 }

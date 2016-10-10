@@ -65,7 +65,7 @@ class SortableVector:public Vector<T,initCapacity>{
 	void merge(ptrdiff_t from,ptrdiff_t to,ptrdiff_t mid,Comparer compare=defaultCompare<T>){
 		T* tmp=new T[to-from];
 		ptrdiff_t left=from,right=mid,neo=0;
-		while(left!=mid&&right!=to){
+		while(left<mid&&right<to){
 			if(compare(this->buffer[left],this->buffer[right])<=0){
 				tmp[neo]=this->buffer[left];
 				left++;
@@ -75,12 +75,12 @@ class SortableVector:public Vector<T,initCapacity>{
 			}
 			neo++;
 		}
-		while(left!=mid){
+		while(left<mid){
 			tmp[neo]=this->buffer[left];
 			left++;
 			neo++;
 		}
-		while(right!=to){
+		while(right<to){
 			tmp[neo]=this->buffer[right];
 			right++;
 			neo++;

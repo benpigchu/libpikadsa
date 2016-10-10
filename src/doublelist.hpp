@@ -12,6 +12,7 @@
 
 template<typename T>
 class DoubleList{
+	protected:
 	struct Node{
 		T value;
 		Node *next=NULL,*prev=NULL;
@@ -241,7 +242,7 @@ class DoubleList{
 			return *this;
 		}
 		Visitor& moveToBefore(Visitor &p){
-			if(this->type==NORMAL&&p.type!=HEAD){
+			if(this->type==NORMAL&&p.type!=HEAD&&this->node!=p.node){
 				if(this->node->prev!=NULL){
 					this->node->prev->next=this->node->next;
 				}else{
@@ -275,7 +276,7 @@ class DoubleList{
 			return *this;
 		}
 		Visitor& moveToAfter(Visitor &p){
-			if(this->type==NORMAL&&p.type!=TAIL){
+			if(this->type==NORMAL&&p.type!=TAIL&&this->node!=p.node){
 				if(this->node->prev!=NULL){
 					this->node->prev->next=this->node->next;
 				}else{
