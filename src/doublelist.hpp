@@ -39,7 +39,7 @@ class DoubleList{
 		bool isTail()const{
 			return type==TAIL;
 		}
-		operator bool(){
+		operator bool()const{
 			return !(isHead()||isTail());
 		}
 		ConstVisitor& next(){
@@ -97,7 +97,7 @@ class DoubleList{
 			return this->node->value;
 		}
 		T* operator->()const{
-			return *(this->node->value);
+			return &(this->node->value);
 		}
 		Visitor& next(){
 			if(this->type==TAIL){
