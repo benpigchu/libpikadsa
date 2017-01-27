@@ -244,6 +244,56 @@ class BinaryTree{
 				}
 			}
 		}
+		Visitor& rotateRight(){
+			if(this->type==NORMAL){
+				if(this->node->leftChild!=NULL){
+					Node* right=this->node;
+					Node* left=right->leftChild;
+					Node* center=left->rightChild;
+					Node* parent=right->parent;
+					this->node=left;
+					right->parent=left;
+					right->leftChild=center;
+					left->parent=parent;
+					left->rightChild=right;
+					if(center!=NULL){
+						center->parent=right;
+					}
+					if(parent!=NULL){
+						if(parent->leftChild==right){
+							parent->leftChild=left;
+						}else{
+							parent->rightChild=left;
+						}
+					}
+				}
+			}
+		}
+		Visitor& rotateLeft(){
+			if(this->type==NORMAL){
+				if(this->node->rightChild!=NULL){
+					Node* left=this->node;
+					Node* right=left->rightChild;
+					Node* center=right->leftChild;
+					Node* parent=left->parent;
+					this->node=right;
+					left->parent=right;
+					left->rightChild=center;
+					right->parent=parent;
+					right->leftChild=left;
+					if(center!=NULL){
+						center->parent=left;
+					}
+					if(parent!=NULL){
+						if(parent->rightChild==left){
+							parent->rightChild=right;
+						}else{
+							parent->leftChild=right;
+						}
+					}
+				}
+			}
+		}
 	};
 	Visitor getRoot(){
 		return Visitor(ROOT,NULL,*this);
