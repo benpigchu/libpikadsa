@@ -4,9 +4,11 @@
 #include <cstddef>
 #include "stack.hpp"
 
-enum VoidExtendInfo{NOINFO};
+namespace __pikalibdsa{
+	struct VoidExtendInfo{};
+}
 
-template<typename T,typename ExtendInfo=VoidExtendInfo>
+template<typename T,typename ExtendInfo=__pikalibdsa::VoidExtendInfo>
 class BinaryTree{
 	protected:
 	struct Node{
@@ -295,6 +297,14 @@ class BinaryTree{
 			}
 		}
 	};
+	protected:
+	const ExtendInfo& getExtendInfo(ConstVisitor v)const{
+		return v.node->info;
+	}
+	ExtendInfo& getExtendInfo(Visitor v){
+		return v.node->info;
+	}
+	public:
 	Visitor getRoot(){
 		return Visitor(ROOT,NULL,*this);
 	}
